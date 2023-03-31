@@ -10,9 +10,17 @@ RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-7302
     unzip commandline.zip -d /sdk && \
     rm commandline.zip
 
+# Move necessary files to `latest` folder
+RUN mkdir /sdk/cmdline-tools/latest
+RUN mv /sdk/cmdline-tools/bin /sdk/cmdline-tools/latest/bin
+RUN mv /sdk/cmdline-tools/lib /sdk/cmdline-tools/latest/lib
+RUN mv /sdk/cmdline-tools/source.properties /sdk/cmdline-tools/latest/source.properties
+RUN mv /sdk/cmdline-tools/NOTICE.txt /sdk/cmdline-tools/latest/NOTICE.txt
+
+
 # Set environment variables
 ENV ANDROID_HOME /sdk
-ENV PATH ${PATH}:${ANDROID_HOME}/cmdline-tools/bin:${ANDROID_HOME}/platform-tools
+ENV PATH ${PATH}:${ANDROID_HOME}/cmdline-tools/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools
 
 # Accept licenses
 RUN yes | sdkmanager --licenses
