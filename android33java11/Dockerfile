@@ -21,7 +21,7 @@ RUN mv /sdk/cmdline-tools/NOTICE.txt /sdk/cmdline-tools/latest/NOTICE.txt
 
 # Set environment variables
 ENV ANDROID_HOME /sdk
-ENV PATH ${PATH}:${ANDROID_HOME}/cmdline-tools/bin:${ANDROID_HOME}/platform-tools
+ENV PATH ${PATH}:${ANDROID_HOME}/cmdline-tools/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools
 
 # Accept licenses
 RUN yes | sdkmanager --licenses
