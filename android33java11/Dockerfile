@@ -1,4 +1,4 @@
-FROM openjdk:11-buster
+FROM openjdk:19-buster
 
 # Install dependencies
 RUN apt-get update && \
