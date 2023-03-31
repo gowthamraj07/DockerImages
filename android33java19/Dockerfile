@@ -1,4 +1,4 @@
-FROM openjdk:19-alpine
+FROM openjdk:19-buster
 
 # Install dependencies
 RUN apt-get update && \
