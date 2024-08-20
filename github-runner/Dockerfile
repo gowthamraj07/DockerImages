@@ -6,6 +6,18 @@ RUN apt-get update && \
     apt-get install -y git curl unzip wget && \
     rm -rf /var/lib/apt/lists/*
 
+# Additional dependencies for GitHub runner
+RUN apt-get update && apt-get install -y \
+    jq \
+    iputils-ping \
+    sudo \
+    libicu66 \
+    libssl-dev \
+    libkrb5-3 \
+    zlib1g \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install Android SDK
 RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip --output commandline.zip && \
     unzip commandline.zip -d /sdk && \
@@ -27,18 +39,6 @@ RUN yes | sdkmanager --licenses
 
 # Install Android build tools and platform
 RUN sdkmanager "build-tools;34.0.0" "platforms;android-34"
-
-# Additional dependencies for GitHub runner
-RUN apt-get update && apt-get install -y \
-    jq \
-    iputils-ping \
-    sudo \
-    libicu66 \
-    libssl-dev \
-    libkrb5-3 \
-    zlib1g \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user for the runner
 RUN useradd -m -s /bin/bash github
