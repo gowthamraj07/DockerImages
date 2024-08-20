@@ -1,51 +1,31 @@
 # Use a base image with Java 17
 FROM openjdk:17.0.1-buster
 
-# Set environment variables for Android SDK
-ENV ANDROID_SDK_ROOT /opt/android-sdk
-ENV PATH ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools:${PATH}
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y git curl unzip wget && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install required packages
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    unzip \
-    wget \
-    curl \
-    git \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+# Install Android SDK
+RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip --output commandline.zip && \
+    unzip commandline.zip -d /sdk && \
+    rm commandline.zip
 
-# Download and install Android Command Line Tools
-RUN mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools \
-    && cd ${ANDROID_SDK_ROOT}/cmdline-tools \
-    && wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip -O commandlinetools.zip \
-    && unzip commandlinetools.zip -d latest \
-    && rm commandlinetools.zip
+# Move necessary files to `latest` folder
+RUN mkdir /sdk/cmdline-tools/latest
+RUN mv /sdk/cmdline-tools/bin /sdk/cmdline-tools/latest/bin
+RUN mv /sdk/cmdline-tools/lib /sdk/cmdline-tools/latest/lib
+RUN mv /sdk/cmdline-tools/source.properties /sdk/cmdline-tools/latest/source.properties
+RUN mv /sdk/cmdline-tools/NOTICE.txt /sdk/cmdline-tools/latest/NOTICE.txt
 
-# Ensure sdkmanager is executable
-RUN chmod +x ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager
 
-# Install the necessary Android SDK packages
-RUN yes | ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --licenses \
-    && ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --update \
-    && ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager "platform-tools" \
-    "platforms;android-34" \
-    "build-tools;34.0.0"
+# Set environment variables
+ENV ANDROID_HOME /sdk
+ENV PATH ${PATH}:${ANDROID_HOME}/cmdline-tools/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools
 
-# Set JAVA_HOME environment variable
-ENV JAVA_HOME /usr/local/openjdk-17
+# Accept licenses
+RUN yes | sdkmanager --licenses
 
-# Optional: Install Gradle
-RUN wget https://services.gradle.org/distributions/gradle-8.7-bin.zip -P /tmp \
-    && unzip /tmp/gradle-8.7-bin.zip -d /opt \
-    && ln -s /opt/gradle-8.7-bin /opt/gradle \
-    && rm /tmp/gradle-8.7-bin.zip
-ENV PATH /opt/gradle/bin:${PATH}
+# Install Android build tools and platform
+RUN sdkmanager "build-tools;34.0.0" "platforms;android-34"
 
-# Optional: Install other tools as needed (like Android NDK)
-# RUN sdkmanager "ndk-bundle"
-
-# Working directory
-WORKDIR /workspace
-
-# Define default command
-CMD ["bash"]
