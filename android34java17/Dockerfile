@@ -21,10 +21,13 @@ RUN mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools \
     && unzip commandlinetools.zip -d latest \
     && rm commandlinetools.zip
 
+# Ensure sdkmanager is executable
+RUN chmod +x ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager
+
 # Install the necessary Android SDK packages
-RUN yes | sdkmanager --licenses \
-    && sdkmanager --update \
-    && sdkmanager "platform-tools" \
+RUN yes | ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --licenses \
+    && ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --update \
+    && ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager "platform-tools" \
     "platforms;android-34" \
     "build-tools;34.0.0"
 
@@ -34,7 +37,7 @@ ENV JAVA_HOME /usr/local/openjdk-17
 # Optional: Install Gradle
 RUN wget https://services.gradle.org/distributions/gradle-8.7-bin.zip -P /tmp \
     && unzip /tmp/gradle-8.7-bin.zip -d /opt \
-    && ln -s /opt/gradle-8.7-bin.zip /opt/gradle \
+    && ln -s /opt/gradle-8.7-bin /opt/gradle \
     && rm /tmp/gradle-8.7-bin.zip
 ENV PATH /opt/gradle/bin:${PATH}
 
