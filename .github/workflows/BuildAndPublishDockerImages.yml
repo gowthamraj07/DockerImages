@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arg1: [ android33java11, android33java19, android33java20, android34java17, devtools, githubRunner ]
+        arg1: [ android33java11, android33java19, android33java20, android34java17, devtools, github-runner ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
