@@ -1,5 +1,5 @@
 # Use a base image with Java 17
-FROM openjdk:17-jdk-slim
+FROM openjdk:17.0.1-buster
 
 # Set environment variables for Android SDK
 ENV ANDROID_SDK_ROOT /opt/android-sdk
