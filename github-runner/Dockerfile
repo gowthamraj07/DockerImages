@@ -3,8 +3,8 @@ FROM openjdk:17.0.1-buster
 
 # Install dependencies and additional dependencies for GitHub runner
 RUN apt-get update && \
-    apt-get install -y git curl unzip wget jq iputils-ping sudo libicu66 libssl-dev libkrb5-3 zlib1g && \
-#     apt-get clean && \
+    apt-get install -y git curl unzip wget jq iputils-ping sudo libssl-dev libkrb5-3 zlib1g && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Android SDK
