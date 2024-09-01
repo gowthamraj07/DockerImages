@@ -1,8 +1,15 @@
 #!/bin/bash
 set -e
 
-# Export TARGETARCH to ensure the correct architecture is used
-export TARGETARCH=${TARGETARCH:-$(uname -m)}
+# Function to deregister the runner
+remove_runner() {
+    echo "Deregistering runner..."
+    ./config.sh remove --unattended --token $TOKEN
+}
+
+# Register trap to remove the runner when the container stops
+trap 'remove_runner; exit 130' INT
+trap 'remove_runner; exit 143' TERM
 
 # Check if the necessary environment variables are set
 if [ -z "$REPO_URL" ] || [ -z "$TOKEN" ]; then
@@ -10,11 +17,13 @@ if [ -z "$REPO_URL" ] || [ -z "$TOKEN" ]; then
     exit 1
 fi
 
-# Configuration name for the runner
-RUNNER_NAME="${RUNNER_NAME:-$(hostname)}"
+# Check if the runner is already configured
+if [ -f ".runner" ]; then
+    echo "Runner already configured. Skipping registration."
+else
+    echo "Configuring runner..."
+    ./config.sh --url $REPO_URL --token $TOKEN --name $(hostname) --work _work --replace --unattended
+fi
 
-# Register the runner with the repository and disable auto-update
-./config.sh --url $REPO_URL --token $TOKEN --name $RUNNER_NAME --work _work --replace --disableupdate
-
-# Run the runner
+# Start the runner
 ./run.sh
