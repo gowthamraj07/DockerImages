@@ -41,6 +41,9 @@ RUN curl -o actions-runner-linux-arm64-2.319.0.tar.gz -L https://github.com/acti
     && rm -f ./actions-runner-linux-arm64-2.319.0.tar.gz \
     && chown -R github:github /home/github/github-runner
 
+# Add Defaults !requiretty to sudoers
+RUN echo "Defaults !requiretty" >> /etc/sudoers
+
 # Copy the entrypoint script and set permissions
 COPY entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh \
