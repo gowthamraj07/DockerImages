@@ -1,5 +1,5 @@
-# Use a base image with Java 17
-FROM openjdk:17-jdk-bullseye
+# Use a base image with Ubuntu
+FROM ubuntu:latest
 
 # Install dependencies and additional dependencies for GitHub runner
 RUN apt-get update && \
