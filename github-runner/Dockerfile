@@ -3,7 +3,7 @@ FROM openjdk:17-jdk-bullseye
 
 # Install dependencies and additional dependencies for GitHub runner
 RUN apt-get update && \
-    apt-get install -y git curl unzip wget jq iputils-ping sudo libssl-dev libkrb5-3 zlib1g && \
+    apt-get install -y git curl unzip wget jq iputils-ping sudo libssl-dev libkrb5-3 zlib1g libicu-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
