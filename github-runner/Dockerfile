@@ -1,5 +1,5 @@
 # Use the provided base image with Java 17 and Android SDK
-FROM openjdk:17.0.1-buster
+FROM openjdk:17.0.1-jdk
 
 # Install dependencies and additional dependencies for GitHub runner
 RUN apt-get update && \
