@@ -32,6 +32,12 @@ RUN sdkmanager "build-tools;34.0.0" "platforms;android-34"
 # Create a non-root user for the runner
 RUN useradd -m -s /bin/bash github
 
+# Add the github user to the sudo group
+RUN usermod -aG sudo github
+
+# Allow the github user to execute sudo commands without a password
+RUN echo "github ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
 # Set the working directory to the home of the non-root user
 WORKDIR /home/github/github-runner
 
