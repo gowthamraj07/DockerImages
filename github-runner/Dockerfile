@@ -7,6 +7,12 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Install OpenJDK 17 and set JAVA_HOME
+RUN apt-get update && \
+    apt-get install -y openjdk-17-jdk && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Install Android SDK
 RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip --output commandline.zip && \
     unzip commandline.zip -d /sdk && \
