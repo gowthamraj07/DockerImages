@@ -1,11 +1,16 @@
-# Use the provided base image with Java 17 and Android SDK
-FROM openjdk:17.0.1-jdk
+# Use the Oracle linux image as the base image
+FROM oraclelinux:9
 
 # Install dependencies and additional dependencies for GitHub runner
 RUN apt-get update && \
     apt-get install -y git curl unzip wget jq iputils-ping sudo libssl-dev libkrb5-3 zlib1g libicu63 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# Install jdk 17 from Oracle
+RUN curl -s https://download.oracle.com/java/17/latest/jdk-17_linux-aarch64_bin.tar.gz --output jdk-17_linux-aarch64_bin.tar.gz && \
+    tar -xzf jdk-17_linux-aarch64_bin.tar.gz -C /usr/local && \
+    rm jdk-17_linux-aarch64_bin.tar.gz
 
 # Install Android SDK
 RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip --output commandline.zip && \
